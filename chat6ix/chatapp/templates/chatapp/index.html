@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <style>
+        .forms{
+            border: 1px solid slateblue;
+            width: 100%;
+            border-radius: 5px;
+            padding: 10px 10px;
+            font-size: 18px;
+        }
+        button{
+            background-color: slateblue;
+            border-radius: 5px;
+            padding: 10px;
+            width: 25%;
+            
+            border: snow 1px solid;
+
+        }
+        .div-1{
+            display: flex;
+            place-items: center;
+            height: 100vh;
+        }
+        form::placeholder{
+            color: steelblue;
+            font-size: 20px;
+        }
+        a{
+            text-decoration: none;
+            color: steelblue;
+            background-color:orchid;
+            border-radius: 5px;
+            border: steelblue 1px solid;
+            width: 25%;
+        }
+        body{
+            background-color: turquoise;
+        }
+        .chatbox-sent{
+            background-color: palevioletred;
+            color: whitesmoke;
+        }
+        .chatbox-rec{
+            background-color: rebeccapurple;
+            color: whitesmoke;
+        }
+        p{
+            padding: 20px;
+            border: whitesmoke 5px solid;
+        }
+    </style>
+    <a href="{%url 'detail'%}">new message</a>
+        {% for chat in message %}
+
+        <div class="chatbox-sent">
+            {{chat}}
+        </div>
+       
+        {%endfor%}
+<div class="div-1">
+<form action="" method="POST">
+    {%csrf_token%}
+    {{form.body}}
+            <br><br>
+        
+        <button type="submit">send</button>
+</form>
+        
+
+
+</div>
+<script>
+    let form = document.querySelector('form')
+    form.addEventListener('submit',sendChat)
+
+    function sendChat(e){
+        e.preventDefault()
+        let chatMessage = document.getElementById('id_body').value
+    }
+    
+</script>
+    
+</body>
+</html>
