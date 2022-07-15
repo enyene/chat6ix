@@ -1,3 +1,4 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,35 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 </head>
 <body>
     <style>
-        .forms{
-            border: 1px solid slateblue;
-            width: 100%;
-            border-radius: 5px;
-            padding: 10px 10px;
-            font-size: 18px;
-        }
-        button{
-            background-color: slateblue;
-            border-radius: 5px;
-            padding: 10px;
-            width: 25%;
-            
-            border: snow 1px solid;
-
-        }
-        .div-1{
-            display: flex;
-            place-items: center;
-            height: 100vh;
-        }
-        form::placeholder{
-            color: steelblue;
-            font-size: 20px;
-        }
+       .forms{
+        border: 1px solid slateblue;
+        
+        width: 100%;
+        border-radius: 5px;
+        padding: 10px 10px;
+        font-size: 18px;
+    }
         a{
             text-decoration: none;
             color: steelblue;
@@ -42,49 +27,87 @@
             border: steelblue 1px solid;
             width: 25%;
         }
-        body{
-            background-color: turquoise;
-        }
-        .chatbox-sent{
-            background-color: palevioletred;
-            color: whitesmoke;
-        }
-        .chatbox-rec{
-            background-color: rebeccapurple;
-            color: whitesmoke;
-        }
-        p{
-            padding: 20px;
-            border: whitesmoke 5px solid;
-        }
+    
+        
+        
     </style>
-    <a href="{%url 'detail'%}">new message</a>
-        {% for chat in message %}
-
-        <div class="chatbox-sent">
-            {{chat}}
-        </div>
+    
+        
        
-        {%endfor%}
-<div class="div-1">
-<form action="" method="POST">
-    {%csrf_token%}
-    {{form.body}}
-            <br><br>
-        
-        <button type="submit">send</button>
-</form>
-        
+       
+<div class="sub-container" >
+    <div class="chat-body" id="chat-body">
+        <form action="" method="POST">
+            {%csrf_token%}
+            {% for chat in message %}
+
+        <div class="chat-box-sent">
+            {{chat}}
+            {%endfor%}
+        </div>
+            {{form.body}}
+                    <br><br>
+                
+                <button type="submit">send</button>
+        </form>
+                
+    </div>
+
 
 
 </div>
 <script>
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
     let form = document.querySelector('form')
     form.addEventListener('submit',sendChat)
 
     function sendChat(e){
         e.preventDefault()
-        let chatMessage = document.getElementById('id_body').value
+        let chatMessage = document.getElementById('id_body').value 
+        const data = { msg: chatMessage };
+        let url = "{%url 'sent' user.id%}"
+
+fetch(url, {
+  method: 'POST', // or 'PUT'
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': csrftoken
+  },
+  body: JSON.stringify(data),
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Success:', data);
+//   let chat_body = document.getElementById('chat_body')
+//   let chatbox = document.createElement('div')
+//   chatbox.classList.add('chatbox-sent')
+//   chatbox.innerText = data
+//   chat_body.append(chatbox)
+let chat_body = document.getElementById('chat_body')
+  let chatbox = document.createElement('div')
+  chatbox.classList.add('chat-box-sent')
+  chatbox.innerText = data
+  chat_body.append(chatbox)
+})
+.catch((error) => {
+  console.error('Error:', error);
+});
+
     }
     
 </script>
