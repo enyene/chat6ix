@@ -1,7 +1,9 @@
 from django.dispatch import receiver
+from django.http import JsonResponse
 from django.shortcuts import redirect, render,HttpResponse
 from django.urls import reverse_lazy
 from .models import ChatMessage, Profile,Friend
+import json
 
 from .forms import ChatMessageForm
 # Create your views here.
@@ -33,3 +35,9 @@ def detail(request):
             return  redirect (detail)
     context = {'form':form,'sender':sender,'reciever':receiver,'message':msg}
     return render (request,'chatapp/index.html',context)
+
+def sentMessages(request,pk):
+    data = json.loads(request.body)
+    chat = data['msg']
+    message = ChatMessage.objects.create(body=chat)
+    return JsonResponse(message.body,safe=False)
