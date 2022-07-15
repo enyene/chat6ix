@@ -1,7 +1,7 @@
 # chat6ix
 a chat app
 ## stacks
-(*)Django
+*Django
 (*)HTML
 (*)CSS
 (*)JavScript
