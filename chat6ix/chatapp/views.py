@@ -4,9 +4,11 @@ from django.shortcuts import redirect, render,HttpResponse
 from django.urls import reverse_lazy
 from .models import ChatMessage, Profile,Friend
 import json
+from django.contrib.auth.decorators import login_required
 
-from .forms import ChatMessageForm
+from .forms import ChatMessageForm,RegistrationForm
 # Create your views here.
+@login_required
 def home(request):
     return HttpResponse('welcome to chat6ix')
 
@@ -41,3 +43,14 @@ def sentMessages(request,pk):
     chat = data['msg']
     message = ChatMessage.objects.create(body=chat)
     return JsonResponse(message.body,safe=False)
+
+def register(request):
+    register = RegistrationForm()
+    if request.method == 'POST':
+        register = RegistrationForm(request.POST)
+        if register.is_valid():
+            register.save()
+            return render(request,'chatapp/register.html',{'form':register})
+    else:
+        register = RegistrationForm()
+    return render(request,'chatapp/register.html',{'form':register})
